@@ -1,10 +1,10 @@
 :root {
   --white: #ffffff;
   --text: #f0f0f0;
-  --text2: #ababab;
-  --theme-color: #7b1fa2;
+  --theme-color: #6200ee;
   --easeOutExpo: cubic-bezier(0.16, 1, 0.3, 1);
   --duration: .6s;
+  --transform: 0px;
 }
 
 html {
@@ -30,18 +30,18 @@ body {
 }
 
 .main-header {
-  padding-bottom: 56px;
   position: relative;
   z-index:1;
+  padding-bottom: 60px;
 }
 
 .wrapper {
   position: fixed;
   display: grid;
   grid-template-columns: 33px auto;
-  grid-gap: 1.5rem;
+  grid-gap: 2rem;
   width: 100%;
-  height: 56px;
+  height: 60px;
   background-color: var(--theme-color);
   color: var(--text);
   padding: 0px 20px;
@@ -50,8 +50,8 @@ body {
 
 .hamburger span {
   display: block;
-  width: 33px;
-  height: 4px;
+  width: 28px;
+  height: 2px;
   margin-bottom: 5px;
   position: relative;
   background: var(--text);
@@ -160,13 +160,7 @@ nav {
   color: var(--text)
 }
 
-
-.container {
-  padding: 20px;
-}
-
-.slider-container {
-  height: 100vh;
+#messages-container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -175,22 +169,28 @@ nav {
   will-change: transform;
   transition: transform 0.3s ease-out;
   cursor: grab;
+  padding: 1rem 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 }
-
 
 .msg-card {
   position: relative;
   background-color: var(--white);
   transition: box-shadow .25s;
   border-radius: 2px;
-  min-height: 100px;
   box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
-  margin: 1.5rem .5rem;
+  margin: 1rem .5rem;
   display: grid;
   grid-template-rows: 60px auto;
   font-size: 1.25rem;
   padding: 1.5rem;
-  touch-action: none
+  touch-action: none;
+  will-change: transform opacity;
+  transform: translateX(var(--transform));
+  content-visibility: auto; 
+  contain-intrinsic-size: 100px 170px; 
 }
 
 .user-info {
@@ -215,7 +215,14 @@ nav {
 
 
 .user-msg {
-  flex: 1;
+  margin: 0 0 1em 0;
+  overflow: hidden;
+}
+
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;  
 }
 
 .card-image {
@@ -232,3 +239,7 @@ nav {
 .card-content {
   flex-grow: 1;
 }
+
+/* @media (prefers-reduced-motion: reduce) {
+  --duration: 1ms;
+} */

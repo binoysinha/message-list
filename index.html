@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/main.css">
   <script src="js/index.js" defer></script>
   <script src="js/slider.js" defer></script>
-
+  <script src="js/infinite.js" defer></script>
 </head>
 <noscript>
 
@@ -20,7 +20,8 @@
 <body>
   <aside id="sidenav">
     <header>
-      <a href="#" class="close-button" title="Close Menu" aria-label="Close Menu" id="sidenav-close-button" tabindex="-1"></a>
+      <a href="#" class="close-button" title="Close Menu" aria-label="Close Menu" id="sidenav-close-button"
+        tabindex="-1"></a>
     </header>
     <nav>
       <a href="#" aria-label="logout">Logout</a>
@@ -34,63 +35,12 @@
           <span></span>
           <span></span>
         </div>
-        <h1>Messages</h1>
+        <h2>Messages</h2>
       </div>
     </header>
-    <section class="container">
-      <div class="slider-container">
-        <div class="msg-card">
-          <div class="user-info">
-            <img src="https://www.w3schools.com/w3css/img_avatar3.png" alt="Avatar">
-            <div class="user-details">
-              <div class="user-name">Binoy Sinha</div>
-              <time>12 mins ago</time>
-            </div>
-          </div>
-          <div class="user-msg">
-            <p>You’re asked to build a prototype that shows a potentially very long list of messages. You can build on your platform of choice (iOS, Android, or web)</p>
-          </div>
-        </div>
-        <div class="msg-card">
-          <div class="user-info">
-            <img src="https://www.w3schools.com/w3css/img_avatar3.png" alt="Avatar">
-            <div class="user-details">
-              <div class="user-name">Binoy Sinha</div>
-              <time>12 mins ago</time>
-            </div>
-          </div>
-          <div class="user-msg">
-            <p>You’re asked to build a prototype that shows a potentially very long list of messages. You can build on your platform of choice (iOS, Android, or web)</p>
-          </div>
-        </div>
-        <div class="msg-card">
-          <div class="user-info">
-            <img src="https://www.w3schools.com/w3css/img_avatar3.png" alt="Avatar">
-            <div class="user-details">
-              <div class="user-name">Binoy Sinha</div>
-              <time>12 mins ago</time>
-            </div>
-          </div>
-          <div class="user-msg">
-            <p>You’re asked to build a prototype that shows a potentially very long list of messages. You can build on your platform of choice (iOS, Android, or web)</p>
-          </div>
-        </div>
-        <div class="msg-card">
-          <div class="user-info">
-            <img src="https://www.w3schools.com/w3css/img_avatar3.png" alt="Avatar">
-            <div class="user-details">
-              <div class="user-name">Binoy Sinha</div>
-              <time>12 mins ago</time>
-            </div>
-          </div>
-          <div class="user-msg">
-            <p>You’re asked to build a prototype that shows a potentially very long list of messages. You can build on your platform of choice (iOS, Android, or web)</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section id="messages-container"></section>
   </main>
-<div id="overlay"/>
+  <div id="overlay" />
 </body>
 
 </html>

@@ -1,5 +1,7 @@
-const slider = document.querySelector('.slider-container');
-// set up our state
+const CARD_HEIGHT = 170;
+const HEADER_HEIGHT = 60;
+const MIN_CARD_BEFORE_REFETCH = Math.ceil((window.innerHeight - HEADER_HEIGHT) / CARD_HEIGHT);
+const messagesContainer = document.getElementById('messages-container');
 
 let isDragging = false,
     currentTranslate = 0,
@@ -8,14 +10,13 @@ let isDragging = false,
     shiftX = 0,
     currentTarget;
 
-slider.addEventListener('dragstart', (e) => e.preventDefault())
-slider.addEventListener('pointerdown', touchStart)
-slider.addEventListener('pointerup', touchEnd)
-slider.addEventListener('pointermove', touchMove)
-slider.addEventListener('pointerleave', touchEnd)
+messagesContainer.addEventListener('dragstart', (e) => e.preventDefault())
+messagesContainer.addEventListener('pointerdown', touchStart)
+messagesContainer.addEventListener('pointerup', touchEnd)
+messagesContainer.addEventListener('pointermove', touchMove)
+messagesContainer.addEventListener('pointerleave', touchEnd)
 
-let thresholdDragWidth = slider.offsetWidth / 2.5;
-
+let thresholdDragWidth = Math.min(messagesContainer.offsetWidth / 3.5, 200);
 
 // make responsive to viewport changes
 //window.addEventListener('resize', setPositionByIndex)
@@ -28,7 +29,7 @@ function getPositionX(event) {
 function touchStart(event) {
     event.preventDefault();
     currentTarget = event.target.closest('.msg-card');
-    if(!currentTarget){
+    if (!currentTarget) {
         return;
     }
     isDragging = true
@@ -38,37 +39,42 @@ function touchStart(event) {
 }
 
 function touchMove(event) {
-    if (!currentTarget && !currentTarget.hasPointerCapture(event.pointerId)) {
+    if (currentTarget && !currentTarget.hasPointerCapture(event.pointerId)) {
         return;
     }
 
     if (isDragging) {
-        draggedPosWidth = event.clientX - shiftX - slider.getBoundingClientRect().left;
+        draggedPosWidth = event.clientX - shiftX - messagesContainer.getBoundingClientRect().left;
+        currentTarget.style.opacity = 0.4;
         animationID = requestAnimationFrame(animation)
     }
 }
 
 function touchEnd(event) {
     cancelAnimationFrame(animationID)
-    isDragging = false
-    // if moved enough negative then snap to next slide if there is one
+    isDragging = false;
+
     if (draggedPosWidth < -thresholdDragWidth || draggedPosWidth > thresholdDragWidth) {
         currentTarget.remove();
+        if (document.querySelectorAll('.msg-card').length === MIN_CARD_BEFORE_REFETCH) {
+            showMessages();
+        }
         draggedPosWidth = 0;
     } else {
         draggedPosWidth = 0;
-        setSliderPosition();
+        setMsgCardPosition(1);
+        currentTarget.style.opacity = 1;
     }
 }
 
 function animation() {
-    setSliderPosition()
+    setMsgCardPosition(0.4)
     if (isDragging) requestAnimationFrame(animation)
 }
 
-function setSliderPosition() {
+function setMsgCardPosition(val) {
     if (currentTarget) {
-        currentTarget.style.transform = `translateX(${draggedPosWidth}px)`
+        currentTarget.style.setProperty('--transform', `${draggedPosWidth}px`);
     }
 
 }
