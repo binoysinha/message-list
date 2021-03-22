@@ -1,0 +1,234 @@
+:root {
+  --white: #ffffff;
+  --text: #f0f0f0;
+  --text2: #ababab;
+  --theme-color: #7b1fa2;
+  --easeOutExpo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: .6s;
+}
+
+html {
+  color: #222;
+  font-size: 10px;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu,
+    Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  display: grid;
+
+}
+
+.main-header {
+  padding-bottom: 56px;
+  position: relative;
+  z-index:1;
+}
+
+.wrapper {
+  position: fixed;
+  display: grid;
+  grid-template-columns: 33px auto;
+  grid-gap: 1.5rem;
+  width: 100%;
+  height: 56px;
+  background-color: var(--theme-color);
+  color: var(--text);
+  padding: 0px 20px;
+  align-items: center;
+}
+
+.hamburger span {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+  background: var(--text);
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 4px 0px;
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+    opacity 0.55s ease;
+}
+
+.hamburger span:first-child {
+  transform-origin: 0% 0%;
+}
+
+.hamburger span:nth-last-child(2) {
+  transform-origin: 0% 100%;
+}
+
+.close-button {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+.close-button:before,
+.close-button:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background: var(--text);
+}
+
+.close-button:before {
+  transform: rotate(45deg);
+}
+
+.close-button:after {
+  transform: rotate(-45deg);
+}
+
+#overlay {
+  position: fixed; 
+  display: none; 
+  width: 100%; 
+  height: 100%; 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); 
+  z-index: 2; 
+  cursor: pointer;
+}
+
+
+#sidenav {
+  width: min(70%, 260px);
+  background-color: #fff;
+  border-inline-end: 1px var(--surface1);
+  box-shadow: 5px 0 40px rgba(0, 0, 0, .45);
+  z-index: 3;
+}
+
+#sidenav header {
+  width: 100%;
+  height: 56px;
+  background-color: var(--theme-color);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+#sidenav {
+  position: fixed;
+  top: 0;
+  bottom: 0px;
+  max-height: 100vh;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  visibility: hidden;
+  transform: translateX(-110vw);
+  will-change: transform;
+  transition: transform var(--duration) var(--easeOutExpo), visibility 0s linear var(--duration);
+}
+
+#sidenav.open {
+  visibility: visible;
+  transform: translateX(0);
+  transition: transform var(--duration) var(--easeOutExpo)
+}
+
+nav {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 2rem;
+  font-size: 1.25rem;
+  color: #e2e2e2;
+  color: var(--text)
+}
+
+
+.container {
+  padding: 20px;
+}
+
+.slider-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scrollbar-width: none;
+  transform: translateX(0);
+  will-change: transform;
+  transition: transform 0.3s ease-out;
+  cursor: grab;
+}
+
+
+.msg-card {
+  position: relative;
+  background-color: var(--white);
+  transition: box-shadow .25s;
+  border-radius: 2px;
+  min-height: 100px;
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+  margin: 1.5rem .5rem;
+  display: grid;
+  grid-template-rows: 60px auto;
+  font-size: 1.25rem;
+  padding: 1.5rem;
+  touch-action: none
+}
+
+.user-info {
+  flex-basis: 30px;
+  display: grid;
+  grid-template-columns: 50px auto;
+  grid-gap: 1.2rem;
+}
+
+.user-info img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+
+.user-msg {
+  flex: 1;
+}
+
+.card-image {
+  max-width: 50%;
+}
+
+.card-stacked {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+}
+
+.card-content {
+  flex-grow: 1;
+}
