@@ -6,44 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Infinitely Scrolling Message List</title>
   <meta name="description" content="This application loads messages automatically on scroll">
-  <meta name="theme-color" content="#7b1fa2">
+  <meta name="theme-color" content="#7F39FB">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
-  <aside id="sidenav">
-    <header>
-      <a href="#" class="close-button" title="Close Menu" aria-label="Close Menu" id="sidenav-close-button"
-        tabindex="-1"></a>
-    </header>
-    <nav>
+  <aside id="sidenav" aria-label="navigation drawer" aria-hidden="true">
+    <div class="nav-header">
+      <button class="menu-btn close-button" aria-label="Close Menu" id="sidenav-close-button"></button>
+    </div>
+    <nav role="navigation">
       <a href="#" aria-label="logout">Logout</a>
     </nav>
   </aside>
-  <main>
-    <header class="app-header">
-      <div class="wrapper">
-        <div id="sidenav-open-button" class="hamburger" title="Open Menu" aria-label="Open Menu" tabindex="-1">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <h2>Messages</h2>
+  <header class="app-header" role="navigation">
+    <button id="sidenav-open-button" class="menu-btn" aria-label="Open Menu">
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    </header>
+    </button>
+    <h2>Messages</h2>
+  </header>
+  <main class="container">
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <ul id="messages-container"></ul>
-    <div class="bouncing-loader">
+    <ul id="messages-container" aria-live="assertive"></ul>
+    <div class="bouncing-loader" aria-hidden="true">
       <div></div>
       <div></div>
       <div></div>
     </div>
   </main>
   <div id="overlay"></div>
-  <div class="err-msg" role="alert"></div>
-  <script src="js/main.js"></script>
+  <div class="error-msg" role="alert" aria-relevant="all"></div>
+  <script src=" js/main.js"> </script>
 </body>
+
 </html>

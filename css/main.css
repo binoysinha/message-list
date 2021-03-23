@@ -1,14 +1,13 @@
 :root {
   --white: #ffffff;
-  --text: #f0f0f0;
   --gray-text: #808080;
-  --err-text: #B71C1C;
-  --theme-color: #6200ee;
+  --err-text: #B00020;
+  --theme-color: #6200EE;
   --easeOutExpo: cubic-bezier(0.16, 1, 0.3, 1);
   --duration: .6s;
   --transform: 0px;
   --shadow: rgba(0, 0, 0, .45);
-  --header-height: 60px;
+  --header-height: 65px;
   --font-size: calc(14px + (18 - 14) * ((100vw - 300px) / (1600 - 300)));
 }
 
@@ -27,63 +26,49 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu,
-    Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 .app-header {
-  position: relative;
-  z-index: 1;
-  padding-bottom: var(--header-height);
-}
-
-.wrapper {
   position: fixed;
+  top: 0;
   display: grid;
-  grid-template-columns: 30px auto;
-  grid-gap: 2rem;
+  grid-template-columns: var(--header-height) auto;
+  grid-gap: 1.5rem;
   width: 100%;
   height: var(--header-height);
   background-color: var(--theme-color);
   color: var(--white);
-  padding: 0px 1.5rem;
   align-items: center;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+}
+
+.container {
+  margin-top: var(--header-height);
+}
+
+.menu-btn {
+  appearance: none;
+  background: inherit;
+  border: 0;
+  height: 100%;
+}
+
+.hamburger {
+  width: 25px;
+  margin: auto;
 }
 
 .hamburger span {
   display: block;
   height: 3px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   position: relative;
   background: var(--white);
   border-radius: 3px;
   z-index: 1;
-}
-
-
-.close-button {
-  position: relative;
-  width: 32px;
-  height: 32px;
-}
-
-.close-button:before,
-.close-button:after {
-  position: absolute;
-  left: 15px;
-  content: ' ';
-  height: 32px;
-  width: 2px;
-  background: var(--white);
-}
-
-.close-button:before {
-  transform: rotate(45deg);
-}
-
-.close-button:after {
-  transform: rotate(-45deg);
 }
 
 #overlay {
@@ -114,16 +99,42 @@ body {
   background-color: var(--white);
   box-shadow: 5px 0 40px var(--shadow);
   z-index: 3;
+  will-change: transform;
 }
 
-#sidenav header {
+.nav-header {
   width: 100%;
   height: var(--header-height);
   background-color: var(--theme-color);
   display: flex;
   justify-content: flex-end;
+  padding: 0 1rem;
   align-items: center;
-  padding: 1.5rem;
+}
+
+.close-button {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.close-button:before,
+.close-button:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 32px;
+  width: 2px;
+  background: var(--white);
+  top: 0;
+}
+
+.close-button:before {
+  transform: rotate(45deg);
+}
+
+.close-button:after {
+  transform: rotate(-45deg);
 }
 
 #sidenav.open {
@@ -151,6 +162,7 @@ nav {
   -webkit-overflow-scrolling: touch;
   overflow-y: scroll;
   scroll-behavior: smooth;
+
 }
 
 .msg-card {
@@ -158,16 +170,17 @@ nav {
   background-color: var(--white);
   transition: box-shadow .25s;
   border-radius: 2px;
-  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
   margin: 0.5rem;
   display: grid;
   grid-template-rows: 4rem auto;
   grid-gap: 0.6rem;
   padding: 1.2rem;
-  touch-action: none;
+  touch-action: pan-y;
   transform: translateX(var(--transform));
+  will-change: transform, opacity;
   content-visibility: auto;
-  contain-intrinsic-size: 100px 14rem;
+  contain-intrinsic-size: 7rem 14rem;
 }
 
 .user-info {
@@ -199,13 +212,13 @@ time {
   font-size: 0.9rem;
 }
 
-.truncate {
+.truncate-text {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
 
-.err-msg {
+.error-msg {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -222,7 +235,7 @@ time {
 @keyframes bouncing-loader {
   to {
     opacity: 0.1;
-    transform: translate3d(0, -16px, 0);
+    transform: translate3d(0, -1.2rem, 0);
   }
 }
 
@@ -233,8 +246,8 @@ time {
 }
 
 .bouncing-loader>div {
-  width: 16px;
-  height: 16px;
+  width: 1.2rem;
+  height: 1.2rem;
   margin: 3rem 0.2rem;
   background-color: var(--theme-color);
   border-radius: 50%;
@@ -252,4 +265,3 @@ time {
 .show-loader {
   opacity: 1;
 }
-

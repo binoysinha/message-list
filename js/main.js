@@ -2,21 +2,23 @@
     'use strict';
 
     const MILLIS_PER_SECOND = 1000;
-    const APPROX_CARD_HEIGHT = 180;
-    const HEADER_HEIGHT = 60;
-    const BUFFER_CARD = 2;
-    const BASE_URL = 'http://message-list.appspot.com';
+    const APPROX_MSG_CARD_HEIGHT = 180;
+    const HEADER_HEIGHT = 65;
+    const BUFFER_CARD = 3;
+    const BASE_URL = 'https://message-list.appspot.com';
 
-    const messagesContainer = document.getElementById('messages-container');
-    const sidenav = document.querySelector('#sidenav')
-    const closenav = document.querySelector('#sidenav-close-button')
-    const opennav = document.querySelector('#sidenav-open-button');
+    const messagesContainer = document.querySelector('#messages-container');
+    const sideNav = document.querySelector('#sidenav');
+    const closeNavBtn = document.querySelector('#sidenav-close-button');
+    const openNavBtn = document.querySelector('#sidenav-open-button');
     const overlay = document.querySelector('#overlay');
     const loader = document.querySelector('.bouncing-loader');
-    const errorElem = document.querySelector('.err-msg');
-    
+    const errorElem = document.querySelector('.error-msg');
+    const mainContainer = document.querySelector('.container');
+    const appHeader = document.querySelector('.app-header');
+
     let thresholdDragWidth = Math.min(messagesContainer.offsetWidth / 3.5, 200);
-    let minCardBeforeRefetch = Math.ceil((window.innerHeight - HEADER_HEIGHT) / APPROX_CARD_HEIGHT);
+    let minCardBeforeRefetch = Math.ceil((window.innerHeight - HEADER_HEIGHT) / APPROX_MSG_CARD_HEIGHT);
     let limit = minCardBeforeRefetch + BUFFER_CARD;
 
     const state = {
@@ -79,42 +81,41 @@
 
     /////////////////////////////////////Sidenav functionality starts///////////////////////////////////////
 
-    opennav.addEventListener('pointerdown', () => {
-        sidenav.classList.add('open');
-        overlay.style.display = 'block';
-    });
-
-    closenav.addEventListener('pointerdown', () => {
-        sidenav.classList.remove('open');
+    function closeSideNav() {
+        sideNav.classList.remove('open');
         overlay.style.display = 'none';
+        sideNav.setAttribute('aria-hidden', 'true');
+        mainContainer.removeAttribute('aria-hidden');
+        appHeader.removeAttribute('aria-hidden');
+    }
+
+    openNavBtn.addEventListener('pointerdown', () => {
+        sideNav.classList.add('open');
+        overlay.style.display = 'block';
+        sideNav.removeAttribute('aria-hidden');
+        mainContainer.setAttribute('aria-hidden', 'true');
+        appHeader.setAttribute('aria-hidden', 'true');
     });
 
-    // set focus to our open/close buttons after animation
-    sidenav.addEventListener('transitionend', event => {
+    closeNavBtn.addEventListener('pointerdown', closeSideNav);
+
+    sideNav.addEventListener('transitionend', event => {
         if (event.propertyName !== 'transform') {
             return;
         }
-
-        const isOpen = sidenav.classList.contains('open');
-
-        isOpen
-            ?
-            closenav.focus() :
-            opennav.focus()
-
+        sideNav.classList.contains('open') ? closeNavBtn.focus() : openNavBtn.focus()
     });
 
     // close our menu when esc is pressed
     document.addEventListener('keyup', event => {
         if (event.code === 'Escape') {
-            sidenav.classList.remove('open');
+            closeSideNav();
         }
     });
 
     overlay.addEventListener('pointerdown', event => {
         if (!event.target.closest("#sidenav")) {
-            sidenav.classList.remove('open');
-            overlay.style.display = 'none';
+            closeSideNav();
         }
     });
 
@@ -125,18 +126,14 @@
 
     function reCalculateDimensions() {
         thresholdDragWidth = Math.min(messagesContainer.offsetWidth / 3.5, 200);
-        minCardBeforeRefetch = Math.ceil((window.innerHeight - HEADER_HEIGHT) / APPROX_CARD_HEIGHT);
+        minCardBeforeRefetch = Math.ceil((window.innerHeight - HEADER_HEIGHT) / APPROX_MSG_CARD_HEIGHT);
         limit = minCardBeforeRefetch + BUFFER_CARD;
     }
-    
+
     window.addEventListener('resize', throttle(reCalculateDimensions, 250));
 
     function getPositionX(event) {
         return event.clientX;
-    }
-
-    function preventDefault(event) {
-        event.preventDefault();
     }
 
     function touchStart(event) {
@@ -145,25 +142,31 @@
         if (!state.currentTarget) {
             return;
         }
-        state.currentTarget.style.willChange = 'transform, opacity';
         state.isDragging = true;
         state.shiftX = getPositionX(event) - state.currentTarget.getBoundingClientRect().left;
         state.currentTarget.setPointerCapture(event.pointerId);
     }
 
     function touchMove(event) {
+
         if (state.currentTarget && !state.currentTarget.hasPointerCapture(event.pointerId)) {
             return;
         }
         if (state.isDragging) {
             state.draggedPosWidth = getPositionX(event) - state.shiftX - messagesContainer.getBoundingClientRect().left;
-            state.currentTarget.style.opacity = 0.4;
-            state.animationID = requestAnimationFrame(animation);
+           
+            if (state.draggedPosWidth > 30 || state.draggedPosWidth < -30) {
+                state.currentTarget.style.opacity = 0.4;
+                state.animationID = requestAnimationFrame(animation);
+            } else {
+                state.draggedPosWidth = 0;
+                return false
+            }
         }
     }
 
     function touchEnd() {
-        if(!state.currentTarget){
+        if (!state.currentTarget) {
             return;
         }
         cancelAnimationFrame(state.animationID);
@@ -172,14 +175,15 @@
         if (state.draggedPosWidth < -thresholdDragWidth || state.draggedPosWidth > thresholdDragWidth) {
             state.currentTarget.remove();
             state.draggedPosWidth = 0;
-            if (document.querySelectorAll('.msg-card') === minCardBeforeRefetch) {
+            if (document.querySelectorAll('.msg-card').length === minCardBeforeRefetch) {
                 showMessages();
             }
         } else {
-            state.draggedPosWidth = 0;
-            state.currentTarget.style.opacity = 1;
-            state.currentTarget.style.willChange = 'auto';
-            setMsgCardPosition();
+            if (state.draggedPosWidth > 30 || state.draggedPosWidth < -30) {
+                state.draggedPosWidth = 0;
+                state.currentTarget.style.opacity = 1;
+                setMsgCardPosition();
+            }
         }
     }
 
@@ -196,11 +200,11 @@
         }
     }
 
-    messagesContainer.addEventListener('dragstart', preventDefault);
     messagesContainer.addEventListener('pointerdown', touchStart);
     messagesContainer.addEventListener('pointerup', touchEnd);
     messagesContainer.addEventListener('pointermove', touchMove);
     messagesContainer.addEventListener('pointerleave', touchEnd);
+    //messagesContainer.addEventListener('dragstart', preventDefault);
 
     /////////////////////////////////////Swipe to delete functionality ends///////////////////////////////////////
 
@@ -214,6 +218,7 @@
     async function getMessages() {
         errorElem.classList.remove('show');
         loader.classList.add('show-loader');
+        loader.removeAttribute('aria-hidden');
         let url = new URL('/messages', BASE_URL);
         url.searchParams.set('limit', limit);
         if (state.token) {
@@ -248,7 +253,7 @@
                     <time>${unixTimeAgo(updated)}</time>
                 </div>
             </div>
-            <p class="user-msg truncate">${content}</p>
+            <p class="user-msg truncate-text">${content}</p>
         `;
         return messageEl;
     }
@@ -269,6 +274,7 @@
             displayError(err);
         } finally {
             loader.classList.remove('show-loader');
+            loader.setAttribute('aria-hidden', 'true');
             state.isDataBeingFetched = false;
         }
     }
@@ -279,7 +285,7 @@
             scrollHeight,
             clientHeight
         } = document.documentElement;
-        if (scrollTop + clientHeight + APPROX_CARD_HEIGHT * 2 >= scrollHeight && !state.isDataBeingFetched) {
+        if (scrollTop + clientHeight + APPROX_MSG_CARD_HEIGHT * BUFFER_CARD >= scrollHeight && !state.isDataBeingFetched) {
             state.isDataBeingFetched = true;
             showMessages();
         }
@@ -287,7 +293,8 @@
 
     showMessages();
     window.addEventListener('scroll', onScroll, {
-        passive: true
+        passive: true,
+        capture: true
     });
 
     /////////////////////////////////////Infinite scroll functionality ends///////////////////////////////////////
