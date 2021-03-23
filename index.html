@@ -3,19 +3,13 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Infinite Scroller</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Infinitely Scrolling Message List</title>
+  <meta name="description" content="This application loads messages automatically on scroll">
   <meta name="theme-color" content="#7b1fa2">
-  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="stylesheet" href="css/main.css">
-  <script src="js/index.js" defer></script>
-  <script src="js/slider.js" defer></script>
-  <script src="js/infinite.js" defer></script>
 </head>
-<noscript>
-
-</noscript>
 
 <body>
   <aside id="sidenav">
@@ -28,7 +22,7 @@
     </nav>
   </aside>
   <main>
-    <header class="main-header">
+    <header class="app-header">
       <div class="wrapper">
         <div id="sidenav-open-button" class="hamburger" title="Open Menu" aria-label="Open Menu" tabindex="-1">
           <span></span>
@@ -38,9 +32,18 @@
         <h2>Messages</h2>
       </div>
     </header>
-    <section id="messages-container"></section>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <ul id="messages-container"></ul>
+    <div class="bouncing-loader">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </main>
-  <div id="overlay" />
+  <div id="overlay"></div>
+  <div class="err-msg" role="alert"></div>
+  <script src="js/main.js"></script>
 </body>
-
 </html>
