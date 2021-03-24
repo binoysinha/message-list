@@ -5,6 +5,7 @@
     const APPROX_MSG_CARD_HEIGHT = 180;
     const HEADER_HEIGHT = 65;
     const BUFFER_CARD = 3;
+    const MIN_HORIZONTAL_DRAG = 30;
     const BASE_URL = 'https://message-list.appspot.com';
 
     const messagesContainer = document.querySelector('#messages-container');
@@ -136,6 +137,10 @@
         return event.clientX;
     }
 
+    function isMinimumDragged() {
+        return state.draggedPosWidth > MIN_HORIZONTAL_DRAG || state.draggedPosWidth < -MIN_HORIZONTAL_DRAG;
+    }
+
     function touchStart(event) {
         event.preventDefault();
         state.currentTarget = event.target.closest('.msg-card');
@@ -154,12 +159,11 @@
         }
         if (state.isDragging) {
             state.draggedPosWidth = getPositionX(event) - state.shiftX - messagesContainer.getBoundingClientRect().left;
-           
-            if (state.draggedPosWidth > 30 || state.draggedPosWidth < -30) {
+
+            if (isMinimumDragged()) {
                 state.currentTarget.style.opacity = 0.4;
                 state.animationID = requestAnimationFrame(animation);
             } else {
-                state.draggedPosWidth = 0;
                 return false
             }
         }
@@ -173,17 +177,12 @@
         state.isDragging = false;
 
         if (state.draggedPosWidth < -thresholdDragWidth || state.draggedPosWidth > thresholdDragWidth) {
-            state.currentTarget.remove();
+            state.currentTarget.classList.add('remove-card');
             state.draggedPosWidth = 0;
-            if (document.querySelectorAll('.msg-card').length === minCardBeforeRefetch) {
-                showMessages();
-            }
-        } else {
-            if (state.draggedPosWidth > 30 || state.draggedPosWidth < -30) {
-                state.draggedPosWidth = 0;
-                state.currentTarget.style.opacity = 1;
-                setMsgCardPosition();
-            }
+        } else if (isMinimumDragged()) {
+            state.draggedPosWidth = 0;
+            state.currentTarget.style.opacity = 1;
+            setMsgCardPosition();
         }
     }
 
@@ -200,11 +199,18 @@
         }
     }
 
+    function deleteCard() {
+        state.currentTarget.remove();
+        if (document.querySelectorAll('.msg-card').length === minCardBeforeRefetch) {
+            showMessages();
+        }
+    }
+
     messagesContainer.addEventListener('pointerdown', touchStart);
     messagesContainer.addEventListener('pointerup', touchEnd);
     messagesContainer.addEventListener('pointermove', touchMove);
     messagesContainer.addEventListener('pointerleave', touchEnd);
-    //messagesContainer.addEventListener('dragstart', preventDefault);
+    messagesContainer.addEventListener('transitionend', deleteCard);
 
     /////////////////////////////////////Swipe to delete functionality ends///////////////////////////////////////
 

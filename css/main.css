@@ -178,9 +178,18 @@ nav {
   padding: 1.2rem;
   touch-action: pan-y;
   transform: translateX(var(--transform));
-  will-change: transform, opacity;
+  transition: max-height 0.4s, padding 0.1s;
+  max-height: auto;
+  will-change: transform, opacity, max-height;
   content-visibility: auto;
   contain-intrinsic-size: 7rem 14rem;
+}
+
+.remove-card {
+  max-height: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
 }
 
 .user-info {
@@ -197,6 +206,11 @@ nav {
   border-radius: 50%;
   border: 1px solid var(--gray-text);
 }
+
+.remove-card img {
+  height:0;
+}
+
 
 .user-name {
   font-weight: bold;
